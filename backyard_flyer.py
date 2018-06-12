@@ -7,7 +7,7 @@ import numpy as np
 from udacidrone import Drone
 from udacidrone.connection import MavlinkConnection, WebSocketConnection  # noqa: F401
 from udacidrone.messaging import MsgID
-
+from udacidrone.connection import CrazyflieConnection
 
 class States(Enum):
     MANUAL = 0
@@ -41,6 +41,8 @@ class BackyardFlyer(Drone):
         TODO: Implement this method
         This triggers when `MsgID.LOCAL_POSITION` is received and self.local_position contains new data
         """
+        if self.flight_state == States.MANUAL:
+           self.takeoff_transition()
         if self.flight_state == States.TAKEOFF:
             if -1.0 * self.local_position[2] > 0.95 * self.target_position[2]:
                 self.all_waypoints = self.calculate_box()
@@ -58,6 +60,9 @@ class BackyardFlyer(Drone):
         TODO: Implement this method
         This triggers when `MsgID.LOCAL_VELOCITY` is received and self.local_velocity contains new data
         """
+        if self.flight_state == States.LANDING:
+           if abs(self.local_position[2] < 0.01):
+               self.manual_transition()
         if self.flight_state == States.LANDING:
             if self.global_position[2] - self.global_home[2] < 0.1:
                 if abs(self.local_position[2]) < 0.01:
@@ -182,8 +187,7 @@ if __name__ == "__main__":
                         help="host address, i.e. '127.0.0.1'")
     args = parser.parse_args()
 
-    conn = MavlinkConnection('tcp:{0}:{1}'.format(
-        args.host, args.port), threaded=False, PX4=False)
+    conn = conn = CrazyflieConnection('radio://0/80/2M')
     #conn = WebSocketConnection('ws://{0}:{1}'.format(args.host, args.port))
     drone = BackyardFlyer(conn)
     time.sleep(2)
