@@ -52,7 +52,7 @@ class BackyardFlyer(Drone):
                 if len(self.all_waypoints) > 0:
                     self.waypoint_transition()
                 else:
-                    if np.linalg.norm(self.local_velocity[0:2]) < 1.0:
+                    if np.linalg.norm(self.local_velocity[0:2]) < 0.5:
                         self.landing_transition()
 
     def velocity_callback(self):
