@@ -63,10 +63,6 @@ class BackyardFlyer(Drone):
         if self.flight_state == States.LANDING:
            if abs(self.local_position[2] < 0.01):
                self.manual_transition()
-        if self.flight_state == States.LANDING:
-            if self.global_position[2] - self.global_home[2] < 0.1:
-                if abs(self.local_position[2]) < 0.01:
-                    self.disarming_transition()
 
     def state_callback(self):
         """
@@ -88,8 +84,9 @@ class BackyardFlyer(Drone):
         1. Return waypoints to fly a box
         """
         print("Setting Home")
-        local_waypoints = [[10.0, 0.0, 3.0], [
-            10.0, 10.0, 3.0], [0.0, 10.0, 3.0], [0.0, 0.0, 3.0]]
+        cp = self.local_position
+        cp[2] = 0
+        local_waypoints = [cp + [1.0, 0.0, 0.5], cp + [1.0, 1.0, 0.5], cp + [0.0, 1.0, 0.5], cp + [0.0, 0.0, 0.5]]
         return local_waypoints
 
     def arming_transition(self):
