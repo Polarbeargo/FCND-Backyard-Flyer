@@ -112,7 +112,7 @@ class BackyardFlyer(Drone):
         """
         print("takeoff transition")
         # self.global_home = np.copy(self.global_position)  # can't write to this variable!
-        target_altitude = 1.0
+        target_altitude = 2.0
         self.target_position[2] = target_altitude
         self.takeoff(target_altitude)
         self.flight_state = States.TAKEOFF
@@ -184,7 +184,7 @@ if __name__ == "__main__":
                         help="host address, i.e. '127.0.0.1'")
     args = parser.parse_args()
 
-    conn = conn = CrazyflieConnection('radio://0/80/2M')
+    conn = conn = CrazyflieConnection('radio://0/80/250K')
     drone = BackyardFlyer(conn)
     time.sleep(2)
     drone.start()
