@@ -112,7 +112,7 @@ class BackyardFlyer(Drone):
         """
         print("takeoff transition")
         # self.global_home = np.copy(self.global_position)  # can't write to this variable!
-        target_altitude = 2.0
+        target_altitude = 0.5
         self.target_position[2] = target_altitude
         self.takeoff(target_altitude)
         self.flight_state = States.TAKEOFF
