@@ -64,19 +64,19 @@ class BackyardFlyer(Drone):
                     self.disarming_transition()
 
     def state_callback(self):
-        """
-        TODO: Implement this method
-        This triggers when `MsgID.STATE` is received and self.armed and self.guided contain new data
-        """
         if self.in_mission:
             if self.flight_state == States.MANUAL:
-                self.arming_transition()
+            # now just passively waiting for the pilot to change these attributes
+            # once the pilot changes, need to update our internal state
+                if self.guided:
+                   self.flight_state = States.ARMING
             elif self.flight_state == States.ARMING:
                 if self.armed:
-                    self.takeoff_transition()
+                   self.takeoff_transition()
+
             elif self.flight_state == States.DISARMING:
-                if ~self.armed & ~self.guided:
-                    self.manual_transition()
+                if not self.armed and not self.guided:
+                   self.manual_transition()
 
     def calculate_box(self):
         """TODO: Fill out this method
@@ -183,7 +183,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     conn = MavlinkConnection('udp:192.168.1.2:14550', threaded=False, PX4=True)
-    #conn = WebSocketConnection('ws://{0}:{1}'.format(args.host, args.port))
+    # conn = WebSocketConnection('ws://{0}:{1}'.format(args.host, args.port))
     drone = BackyardFlyer(conn)
     time.sleep(2)
     drone.start()
