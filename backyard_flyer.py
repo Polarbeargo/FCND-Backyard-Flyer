@@ -62,11 +62,11 @@ class BackyardFlyer(Drone):
 
     def state_callback(self):
         if self.in_mission:
-        if self.flight_state == States.MANUAL:
+            if self.flight_state == States.MANUAL:
             # now just passively waiting for the pilot to change these attributes
             # once the pilot changes, need to update our internal state
-            if self.guided:
-                self.flight_state = States.ARMING
+                if self.guided:
+                    self.flight_state = States.ARMING
         elif self.flight_state == States.ARMING:
             if self.armed:
                 self.takeoff_transition()
