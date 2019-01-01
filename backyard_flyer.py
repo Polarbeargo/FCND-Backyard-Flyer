@@ -184,7 +184,7 @@ if __name__ == "__main__":
                         help="host address, i.e. '127.0.0.1'")
     args = parser.parse_args()
 
-    conn = MavlinkConnection('udp:192.168.1.2:14550', threaded=False, PX4=True)
+    conn = MavlinkConnection('udp:192.168.1.1:14550', PX4=True, threaded=False)
     # conn = WebSocketConnection('ws://{0}:{1}'.format(args.host, args.port))
     drone = BackyardFlyer(conn)
     time.sleep(2)
