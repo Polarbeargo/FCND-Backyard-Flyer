@@ -58,25 +58,28 @@ class BackyardFlyer(Drone):
         TODO: Implement this method
         This triggers when `MsgID.LOCAL_VELOCITY` is received and self.local_velocity contains new data
         """
-        if self.flight_state == States.LANDING:
-            if self.global_position[2] - self.global_home[2] < 0.1:
-                if abs(self.local_position[2]) < 0.01:
-                    self.disarming_transition()
+        pass
 
     def state_callback(self):
         if self.in_mission:
-            if self.flight_state == States.MANUAL:
+        if self.flight_state == States.MANUAL:
             # now just passively waiting for the pilot to change these attributes
             # once the pilot changes, need to update our internal state
-                if self.guided:
-                   self.flight_state = States.ARMING
-            elif self.flight_state == States.ARMING:
-                if self.armed:
-                   self.takeoff_transition()
-
-            elif self.flight_state == States.DISARMING:
-                if not self.armed and not self.guided:
-                   self.manual_transition()
+            if self.guided:
+                self.flight_state = States.ARMING
+        elif self.flight_state == States.ARMING:
+            if self.armed:
+                self.takeoff_transition()
+        elif self.flight_state == States.LANDING:
+            # check if the pilot has changed the armed and control modes
+            # if so (and the script no longer in control) stop the mission
+            if not self.armed and not self.guided:
+                self.stop()
+                self.in_mission = False
+        elif self.flight_state == States.DISARMING:
+            # no longer want the vehicle to handle the disarming and releasing control
+            # that will be done by the pilot
+            pass
 
     def calculate_box(self):
         """TODO: Fill out this method
