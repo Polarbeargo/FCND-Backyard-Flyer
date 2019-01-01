@@ -85,9 +85,8 @@ class BackyardFlyer(Drone):
         """TODO: Fill out this method
         1. Return waypoints to fly a box
         """
-        print("Setting Home")
-        local_waypoints = [[10.0, 0.0, 3.0], [
-            10.0, 10.0, 3.0], [0.0, 10.0, 3.0], [0.0, 0.0, 3.0]]
+        cp = np.array([self.local_position[0], self.local_position[1], -self.local_position[2]])  # get the current local position -> note we need to change the sign of the down coordinate to be altitude
+        local_waypoints = [cp + [10.0, 0.0, 3.0], cp + [10.0, 10.0, 3.0], cp + [0.0, 10.0, 3.0], cp + [0.0, 0.0, 3.0]]
         return local_waypoints
 
     def arming_transition(self):
