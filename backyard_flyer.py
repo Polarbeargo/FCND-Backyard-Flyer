@@ -173,6 +173,7 @@ class BackyardFlyer(Drone):
         self.start_log("Logs", "NavLog.txt")
         print("starting connection")
         self.connection.start()
+        print("connection success")
         print("Closing log file")
         self.stop_log()
 
@@ -189,3 +190,4 @@ if __name__ == "__main__":
     drone = BackyardFlyer(conn)
     time.sleep(2)
     drone.start()
+    print("dron start")
